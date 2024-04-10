@@ -1,4 +1,4 @@
-export interface ReqCryptoData {
+export interface ReqCryptoPrice {
   time: number;
   high: number;
   low: number;

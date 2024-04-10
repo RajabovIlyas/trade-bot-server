@@ -1,4 +1,4 @@
-import { ReqCryptoData } from './req-crypto-data.interface';
+import { ReqCryptoPrice } from './req-crypto-price.interface';
 
 export interface ReqCrypto {
   Response: string;
@@ -10,6 +10,6 @@ export interface ReqCrypto {
     Aggregated: string;
     TimeFrom: number;
     TimeTo: number;
-    Data: ReqCryptoData[];
+    Data: ReqCryptoPrice[];
   };
 }

@@ -6,7 +6,9 @@ import { CronModule } from './cron/cron.module';
 import { BuyerModule } from './buyer/buyer.module';
 import { CryptocurrencyModule } from './cryptocurrency/cryptocurrency.module';
 import { HistoryBuyModule } from './history-buy/history-buy.module';
-import { CoinBuyModule } from './coin-buy/coin-buy.module';
+import { CryptoExchangeModule } from './crypto-exchange/crypto-exchange.module';
+import { TradeModule } from './trade/trade.module';
+import { StrategiesModule } from './strategies/strategies.module';
 
 @Module({
   imports: [
@@ -21,7 +23,9 @@ import { CoinBuyModule } from './coin-buy/coin-buy.module';
     BuyerModule,
     CryptocurrencyModule,
     HistoryBuyModule,
-    CoinBuyModule,
+    CryptoExchangeModule,
+    TradeModule,
+    StrategiesModule,
   ],
 })
 export class AppModule {}

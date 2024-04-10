@@ -1,9 +1,9 @@
 import { Module } from '@nestjs/common';
 import { CronService } from './cron.service';
-import { CoinBuyModule } from '../coin-buy/coin-buy.module';
+import { TradeModule } from '../trade/trade.module';
 
 @Module({
-  imports: [CoinBuyModule],
+  imports: [TradeModule],
   providers: [CronService],
 })
 export class CronModule {}

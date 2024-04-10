@@ -1,17 +1,17 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { Cron, CronExpression } from '@nestjs/schedule';
-import { CoinBuyService } from '../coin-buy/coin-buy.service';
+import { TradeService } from '../trade/trade.service';
 
 @Injectable()
 export class CronService {
   private readonly logger = new Logger(CronService.name);
 
-  constructor(private coinBuyService: CoinBuyService) {}
+  constructor(private tradeService: TradeService) {}
 
-  @Cron(CronExpression.EVERY_30_SECONDS)
+  @Cron(CronExpression.EVERY_DAY_AT_9AM)
   async everyDay() {
     this.logger.log('Start cron');
-    await this.coinBuyService.checkRsiToBuy();
+    await this.tradeService.makeCryptoDecision();
     this.logger.log('Finish cron');
   }
 }
