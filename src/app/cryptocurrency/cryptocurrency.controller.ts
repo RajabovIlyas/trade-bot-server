@@ -1,8 +1,11 @@
-import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Query } from '@nestjs/common';
 import { CreateCryptocurrencyDto } from './dtos/create-cryptocurrency.dto';
 import { CryptocurrencyService } from './cryptocurrency.service';
 import { Cryptocurrency } from '@prisma/client';
+import { ApiTags } from '@nestjs/swagger';
+import { QueryCryptocurrencyDto } from './dtos/query-cryptocurrency.dto';
 
+@ApiTags('cryptocurrency')
 @Controller('cryptocurrency')
 export class CryptocurrencyController {
   constructor(private readonly cryptocurrencyService: CryptocurrencyService) {}
@@ -13,8 +16,8 @@ export class CryptocurrencyController {
   }
 
   @Get()
-  getAll() {
-    return this.cryptocurrencyService.find();
+  getAll(@Query() query: QueryCryptocurrencyDto) {
+    return this.cryptocurrencyService.find({ sortParams: query });
   }
 
   @Get(':id')

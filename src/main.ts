@@ -3,9 +3,10 @@ import { AppModule } from './app/app.module';
 import { ZodValidationPipe } from 'nestjs-zod';
 import { Logger } from '@nestjs/common';
 import { loggerOption } from './options/logger.option';
+import configDevelopment from './config';
+import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
-const PORT = 3000;
-const GLOBAL_PREFIX = '/api';
+const { port: PORT, globalPrefix: GLOBAL_PREFIX } = configDevelopment;
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
@@ -13,8 +14,16 @@ async function bootstrap() {
     logger: loggerOption,
   });
 
+  const config = new DocumentBuilder()
+    .setTitle('Trade bot')
+    .setVersion('1.0')
+    .build();
+
   app.setGlobalPrefix(GLOBAL_PREFIX);
   app.useGlobalPipes(new ZodValidationPipe());
+
+  const document = SwaggerModule.createDocument(app, config);
+  SwaggerModule.setup(GLOBAL_PREFIX, app, document);
 
   await app.listen(PORT);
   Logger.log(

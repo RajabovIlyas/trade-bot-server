@@ -5,7 +5,8 @@ export const configDevelopment: Environment = {
   production: false,
 
   NODE_ENV: 'development',
-  port: 3000,
+  port: process.env.PORT ? Number(process.env.PORT) : 3000,
+  globalPrefix: '/api',
   urlCryptoExchange: 'https://min-api.cryptocompare.com',
   cryptoCompare: process.env.CRYPTO_COMPARE,
   glassNode: process.env.GLASS_NODE,

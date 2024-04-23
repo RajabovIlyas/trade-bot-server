@@ -4,14 +4,31 @@ import { Cryptocurrency, Prisma } from '@prisma/client';
 import {
   ERROR_UNIQUE_CODE,
   ERROR_UNIQUE_SYMBOL_IN_CRYPTOCURRENCY,
-} from './cryptocurrency.constant';
+} from './constants/cryptocurrency.constant';
+import { SortParams } from '@/query-params/sort-by.params';
+import { WalletService } from '@/app/wallet/wallet.service';
 
 @Injectable()
 export class CryptocurrencyService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly walletService: WalletService,
+  ) {}
 
-  find(cryptocurrency?: Partial<Cryptocurrency>) {
-    return this.prisma.cryptocurrency.findMany({ where: cryptocurrency });
+  find({
+    cryptocurrency,
+    sortParams,
+  }: {
+    cryptocurrency?: Prisma.CryptocurrencyWhereInput;
+    sortParams: SortParams<Cryptocurrency>;
+  }) {
+    const { propertyOrder, sortOrder } = sortParams;
+    return this.prisma.cryptocurrency.findMany({
+      where: cryptocurrency,
+      orderBy: {
+        [propertyOrder]: sortOrder,
+      },
+    });
   }
 
   findById(id: string) {
@@ -42,6 +59,22 @@ export class CryptocurrencyService {
     return this.prisma.cryptocurrency.update({
       where: { id },
       data,
+    });
+  }
+
+  async getUseCryptocurrencies() {
+    const cryptocurrencyIds = await this.walletService.getUseCryptocurrencies();
+
+    return this.prisma.cryptocurrency.findMany({
+      where: {
+        id: {
+          in: cryptocurrencyIds.map(({ cryptocurrencyId }) => cryptocurrencyId),
+        },
+      },
+      select: {
+        id: true,
+        symbol: true,
+      },
     });
   }
 }

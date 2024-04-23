@@ -3,12 +3,12 @@ import { ScheduleModule } from '@nestjs/schedule';
 import { ConfigModule } from '@nestjs/config';
 import { PrismaModule } from './prisma/prisma.module';
 import { CronModule } from './cron/cron.module';
-import { BuyerModule } from './buyer/buyer.module';
 import { CryptocurrencyModule } from './cryptocurrency/cryptocurrency.module';
-import { HistoryBuyModule } from './history-buy/history-buy.module';
 import { CryptoExchangeModule } from './crypto-exchange/crypto-exchange.module';
 import { TradeModule } from './trade/trade.module';
 import { StrategiesModule } from './strategies/strategies.module';
+import { WalletModule } from './wallet/wallet.module';
+import { HistoryBuyModule } from './history-buy/history-buy.module';
 
 @Module({
   imports: [
@@ -20,7 +20,7 @@ import { StrategiesModule } from './strategies/strategies.module';
     PrismaModule,
     CronModule,
 
-    BuyerModule,
+    WalletModule,
     CryptocurrencyModule,
     HistoryBuyModule,
     CryptoExchangeModule,

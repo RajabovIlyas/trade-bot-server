@@ -8,10 +8,10 @@ export class CronService {
 
   constructor(private tradeService: TradeService) {}
 
-  @Cron(CronExpression.EVERY_DAY_AT_9AM)
-  async everyDay() {
-    this.logger.log('Start cron');
-    await this.tradeService.makeCryptoDecision();
-    this.logger.log('Finish cron');
+  @Cron(CronExpression.EVERY_HOUR)
+  async everyHour() {
+    this.logger.log('Start cron: Trade by hour!');
+    await this.tradeService.tradeCalculatorByHour();
+    this.logger.log('Finish cron: Trade by hour!');
   }
 }

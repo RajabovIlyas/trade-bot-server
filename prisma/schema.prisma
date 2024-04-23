@@ -9,36 +9,57 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
-  url      = env("DATABASE_URL")
-}
-
-model Buyer {
-  id         String       @id @default(uuid())
-  name       String
-  wallet     Float        @default(100)
-  HistoryBuy HistoryBuy[]
-  createdAt  DateTime     @default(now())
-  updatedAt  DateTime     @updatedAt
-}
-
-model HistoryBuy {
-  id               String         @id @default(uuid())
-  buyer            Buyer          @relation(fields: [buyerId], references: [id])
-  buyerId          String
-  cryptocurrency   Cryptocurrency @relation(fields: [cryptocurrencyId], references: [id])
-  cryptocurrencyId String
-  price            Float
-  count            Float
-  createdAt        DateTime       @default(now())
-  updatedAt        DateTime       @updatedAt
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DATABASE_URL")
 }
 
 model Cryptocurrency {
-  id         String       @id @default(uuid())
-  name       String
-  symbol     String       @unique
-  HistoryBuy HistoryBuy[]
-  createdAt  DateTime     @default(now())
-  updatedAt  DateTime     @updatedAt
+  id        String   @id @default(uuid())
+  name      String
+  symbol    String   @unique
+  wallets   Wallet[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Wallet {
+  id                     String         @id @default(uuid())
+  name                   String
+  usd                    Float          @default(100)
+  cryptocurrencyQuantity Float          @default(0)
+  strategy               StrategyAction
+  cryptocurrency         Cryptocurrency @relation(fields: [cryptocurrencyId], references: [id])
+  cryptocurrencyId       String
+  historyBuyers          HistoryBuy[]
+  createdAt              DateTime       @default(now())
+  updatedAt              DateTime       @updatedAt
+}
+
+model HistoryBuy {
+  id         String      @id @default(uuid())
+  wallet     Wallet      @relation(fields: [walletId], references: [id])
+  walletId   String
+  status     TradeAction
+  date       DateTime
+  price      Float
+  count      Float
+  calculated Float
+  createdAt  DateTime    @default(now())
+  updatedAt  DateTime    @updatedAt
+}
+
+enum TradeAction {
+  buy
+  cell
+  wait
+}
+
+enum StrategyAction {
+  CCI
+  RSI
+  STOCH
+  MACD
+  PPO
+  DEMA
 }

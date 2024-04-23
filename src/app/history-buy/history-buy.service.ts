@@ -1,13 +1,30 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
-import { HistoryBuy } from '@prisma/client';
+import { HistoryBuy, Prisma } from '@prisma/client';
+import { SortParams } from '@/query-params/sort-by.params';
 
 @Injectable()
 export class HistoryBuyService {
   constructor(private prisma: PrismaService) {}
 
-  find(historyBuy?: Partial<HistoryBuy>) {
-    return this.prisma.historyBuy.findMany({ where: historyBuy });
+  find({
+    historyBuy,
+    sortParams,
+  }: {
+    historyBuy?: Prisma.HistoryBuyWhereInput;
+    sortParams: SortParams<HistoryBuy>;
+  }) {
+    const { propertyOrder, sortOrder } = sortParams;
+    return this.prisma.historyBuy.findMany({
+      where: historyBuy,
+      orderBy: {
+        [propertyOrder]: sortOrder,
+      },
+    });
+  }
+
+  findByWalletId(id: string) {
+    return this.prisma.historyBuy.findFirst({ where: { walletId: id } });
   }
 
   findById(id: string) {
@@ -26,10 +43,10 @@ export class HistoryBuyService {
     return this.prisma.historyBuy.delete({ where: { id } });
   }
 
-  changeById(id: string, data: Partial<HistoryBuy>) {
-    return this.prisma.historyBuy.update({
-      where: { id },
-      data,
+  getLastByWalletId(walletId: string) {
+    return this.prisma.historyBuy.findFirst({
+      where: { walletId },
+      orderBy: { updatedAt: Prisma.SortOrder.desc },
     });
   }
 }
